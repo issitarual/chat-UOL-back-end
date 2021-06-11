@@ -88,4 +88,18 @@ app.post("/status", (req, res) => {
     res.sendStatus(200);
 });
 
+setInterval(()=>{
+    let online = [];
+    for(let i = 0; i < participants.length; i++){
+        if(participants[i].lastStatus - dayjs(Date.now()).format('HH:mm:ss') < 10){
+            online.push(participants[i]);
+        }
+        else{
+            messages.push(
+                {from: participants[i].name, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs(Date.now()).format('HH:mm:ss')}
+            )
+        }
+    }
+}, 15000);
+
 app.listen(4000);
