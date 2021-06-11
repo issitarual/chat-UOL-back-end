@@ -58,7 +58,23 @@ app.post("/messages", (req, res) => {
 
 app.get("/messages", (req, res) => {
     let limit = req.query.limit;
-    res.send(messages);
+    const user = req.headers.user;
+    const filterMessages = messages.filter(n => n.type === 'message' || n.type === 'status' || (n.type === 'private_message' && (n.from === user || n.to === user)))
+    if(!limit){
+        res.send(filterMessages);
+    }
+    else{
+        const reverseFilterMessages = filterMessages.reverse();
+        let limitFilterMessages = []
+        for( let i = 0; i< reverseFilterMessages.length; i++){
+            limitFilterMessages.push(reverseFilterMessages[i]);
+            if(limitFilterMessages.length === limit){
+                res.send(limitFilterMessages.reverse());
+                return;
+            }
+        }
+        res.send(limitFilterMessages.reverse());
+    }        
 });
 
 app.post("/status", (req, res) => {
