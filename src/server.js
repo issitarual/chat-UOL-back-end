@@ -45,7 +45,8 @@ app.post("/messages", (req, res) => {
 });
 
 app.get("/messages", (req, res) => {
-
+    let limit = req.query.limit;
+    res.send(messages);
 });
 
 app.post("/status", (req, res) => {
