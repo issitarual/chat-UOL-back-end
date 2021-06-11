@@ -37,7 +37,7 @@ app.post("/participants", (req, res) => {
 });
 
 app.get("/participants", (req, res) => {
-
+    res.send(participants);
 });
 
 app.post("/messages", (req, res) => {
