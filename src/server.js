@@ -6,9 +6,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-let nextParticipantId = 1;
 let participants = [];
-let nextMessageId = 1;
 let messages = [];
 
 app.post("/participants", (req, res) => {
@@ -19,18 +17,14 @@ app.post("/participants", (req, res) => {
         return;
     }
     participant.lastStatus = Date.now();
-    participant.id = nextParticipantId;
     participants.push(participant);
     const enter = {
-        id: nextMessageId,
         from: name,
         to: 'Todos',
         text: 'entra na sala...',
         type: 'status',
         time: dayjs(participant.lastStatus).format('HH:mm:ss')
     }
-    nextParticipantId++;
-    nextMessageId++;
     messages.push(enter);
     res.sendStatus(200);
 });
@@ -50,9 +44,7 @@ app.post("/messages", (req, res) => {
     }
     newMessage.from = from;
     newMessage.time = dayjs(Date.now()).format('HH:mm:ss');
-    newMessage.id = nextMessageId;
     messages.push(newMessage);
-    nextMessageId++;
     res.sendStatus(200);
 });
 
@@ -78,7 +70,22 @@ app.get("/messages", (req, res) => {
 });
 
 app.post("/status", (req, res) => {
-
+    const user = req.headers.user;
+    if(!participants.find(n => n.name === user)){
+        res.sendStatus(400);
+    }
+    let online = []
+    for(let i = 0; i < participants.length; i++){
+        if(participants[i].name === user){
+            participants[i].lastStatus = dayjs(Date.now()).format('HH:mm:ss');
+            online.push(participants[i]);
+        }
+        else{
+            online.push(participants[i]);
+        }
+    }
+    participants = online;
+    res.sendStatus(200);
 });
 
 app.listen(4000);
