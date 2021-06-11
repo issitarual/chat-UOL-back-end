@@ -77,7 +77,7 @@ app.post("/status", (req, res) => {
     let online = []
     for(let i = 0; i < participants.length; i++){
         if(participants[i].name === user){
-            participants[i].lastStatus = dayjs(Date.now()).format('HH:mm:ss');
+            participants[i].lastStatus = Date.now();
             online.push(participants[i]);
         }
         else{
@@ -91,12 +91,18 @@ app.post("/status", (req, res) => {
 setInterval(()=>{
     let online = [];
     for(let i = 0; i < participants.length; i++){
-        if(participants[i].lastStatus - dayjs(Date.now()).format('HH:mm:ss') < 10){
+        if(Date.now() - participants[i].lastStatus <= 1000){
             online.push(participants[i]);
         }
         else{
             messages.push(
-                {from: participants[i].name, to: 'Todos', text: 'sai da sala...', type: 'status', time: dayjs(Date.now()).format('HH:mm:ss')}
+                {
+                    from: participants[i].name, 
+                    to: 'Todos', 
+                    text: 'sai da sala...', 
+                    type: 'status', 
+                    time: dayjs(Date.now()).format('HH:mm:ss')
+                }
             )
         }
     }
