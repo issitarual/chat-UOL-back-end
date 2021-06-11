@@ -91,7 +91,7 @@ app.post("/status", (req, res) => {
 setInterval(()=>{
     let online = [];
     for(let i = 0; i < participants.length; i++){
-        if(Date.now() - participants[i].lastStatus <= 1000){
+        if(Date.now() - participants[i].lastStatus <= 10000){
             online.push(participants[i]);
         }
         else{
