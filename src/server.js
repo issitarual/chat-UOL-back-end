@@ -103,9 +103,10 @@ setInterval(()=>{
                     type: 'status', 
                     time: dayjs(Date.now()).format('HH:mm:ss')
                 }
-            )
+            );
         }
     }
+    participants = online;
 }, 15000);
 
 app.listen(4000);
