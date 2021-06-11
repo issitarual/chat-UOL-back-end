@@ -21,14 +21,17 @@ app.post("/participants", (req, res) => {
     participant.lastStatus = Date.now();
     participant.id = nextParticipantId;
     participants.push(participant);
-    nextParticipantId++;
     const enter = {
+        id: nextMessageId,
         from: name,
+        participantId: participant.id,
         to: 'Todos',
         text: 'entra na sala...',
         type: 'status',
         time: dayjs(participant.lastStatus).format('HH:mm:ss')
     }
+    nextParticipantId++;
+    nextMessageId++;
     messages.push(enter);
     res.sendStatus(200);
 });
