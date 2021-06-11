@@ -24,7 +24,6 @@ app.post("/participants", (req, res) => {
     const enter = {
         id: nextMessageId,
         from: name,
-        participantId: participant.id,
         to: 'Todos',
         text: 'entra na sala...',
         type: 'status',
@@ -41,7 +40,20 @@ app.get("/participants", (req, res) => {
 });
 
 app.post("/messages", (req, res) => {
-
+    const newMessage = req.body;
+    const { to, text, type } = newMessage;
+    const from = req.headers.user;
+    const typeValidation =  type === 'message' || type === 'private_message';
+    if(to.length === 0 || text.length === 0 || from.length === 0 || !typeValidation){
+        res.sendStatus(400);
+        return;
+    }
+    newMessage.from = from;
+    newMessage.time = dayjs(Date.now()).format('HH:mm:ss');
+    newMessage.id = nextMessageId;
+    messages.push(newMessage);
+    nextMessageId++;
+    res.sendStatus(200);
 });
 
 app.get("/messages", (req, res) => {
